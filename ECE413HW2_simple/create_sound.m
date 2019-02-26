@@ -21,7 +21,7 @@ function [soundSample]=create_sound(instrument,notes,constants)
         freq = 261.63;
     elseif notes.note == "E4"
         freq = 329.63;
-    else    %G4
+    else    %G4/default
         freq = 392;
     end
     
@@ -29,17 +29,17 @@ function [soundSample]=create_sound(instrument,notes,constants)
     if instrument.temperament == "Equal"
         twv = (2)^(1/12);       %Twelfth root of 2
         freqs = [1, twv^3, twv^4, twv^7];   %Frequencies needed for major/minor
-    else    %Just
+    else    %Just/default
         freqs = [1, 6/5, 5/4, 3/2];
     end
     freqs = freq*freqs;         %Scale appropriately
     
-    %Major or Minor chord
+    %Major or Minor chord or note
     if instrument.mode == "Major"
         freqs = freqs([1,3,4]);
     elseif instrument.mode == "Minor"
         freqs = freqs([1,2,4]);
-    else %Note
+    else %Note/default
         freqs = freqs(1);
     end
     
@@ -54,7 +54,7 @@ function [soundSample]=create_sound(instrument,notes,constants)
             [1,.9,.65,.55,.325,.35,.25,.2,.15,.1,.075];         %Durations
         rs = freqs'*([.56,.56,.92,.92,1.19,1.7,2,2.74,3,3.76,4.07] + ...
             [0,1,0,1.7,0,0,0,0,0,0,0]);                         %Frequencies
-        f2s = 2.^(-10*(1./durs')*t);        %Waveform Envelope
+        f2s = 2.^(-10*(1./durs')*t);            %Waveform Envelope
         
         env = repmat(amps',1,length(t)).*f2s;   %Envelope scaled by amplitudes
         
@@ -68,10 +68,10 @@ function [soundSample]=create_sound(instrument,notes,constants)
         %Square wave tthat moves resonant freq from high to low
         
         r = .9;                         %Radius of pole locations
-        th = linspace(pi,0,length(t));   %Theta values
+        th = linspace(pi,0,length(t));  %Theta value at each time
         
         %Make resonant freq have gain of 0dB
-        amps = abs(exp(2*1j*th)-2*r*cos(th).*exp(1j*th)+r^2); 
+        amps = abs(exp(2*1j*th)-2*r*cos(th).*exp(1j*th)+r^2); %Scaling factor
         
         sq = square(freqs'*t);     %Square waves   
         
@@ -89,7 +89,7 @@ function [soundSample]=create_sound(instrument,notes,constants)
     elseif instrument.sound == "FM"
         %Bell from Jerse 5.9b
         amp = 1;            %Amplitude
-        IMAX = 10;
+        IMAX = 10;          %Variable from Jerse
         
         fm = freqs*7/5;     %Modulation frequencies
         %s1 is left path from figure

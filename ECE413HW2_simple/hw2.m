@@ -1,4 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Karol Wadolowski
 % SCRIPT
 %    hw2
 %
@@ -81,7 +82,6 @@ for cntSynth=1:length(synthTypes)
     %notes{2}.note='E4';
     
     fprintf(STDOUT,'For the %s synthesis type...\n',synthTypes{cntSynth})
-    
     disp('Playing the Just Tempered Major Chord');
     soundsc(soundMajorChordJust,constants.fs);
     pause(constants.durationChord)
